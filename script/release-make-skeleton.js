@@ -7,7 +7,7 @@ const esy = require('../esy.json')
 
 console.log(`Using esy.json:\n${esy}`)
 
-const filesToCopy = ['LICENSE', 'README.md', 'js/index.js']
+const filesToCopy = ['LICENSE', 'README.md', 'vendors/ReactIntl.re']
 
 function exec(cmd) {
   console.log(`exec: ${cmd}`)
@@ -56,7 +56,6 @@ const pkgJson = {
   homepage: esy.homepage,
   license: esy.license,
   repository: esy.repository,
-  main: 'js/index.js',
   scripts: {
     postinstall: 'node postinstall.js',
   },
@@ -68,7 +67,6 @@ const pkgJson = {
     'platform-linux-x64/',
     'platform-darwin-x64/',
     'postinstall.js',
-    'js',
     'react-intl-auto-id-ppx.exe',
   ],
 }
