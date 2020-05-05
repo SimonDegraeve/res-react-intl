@@ -1,0 +1,7 @@
+(executable
+  (name Bin)
+  (public_name react-intl-auto-id-ppx)
+  (libraries react-intl-auto-id-ppx.lib)
+  (ocamlopt_flags ( -linkall ))
+  (package react-intl-auto-id-ppx)
+)

@@ -1,0 +1,7 @@
+(library
+ (name react_intl_auto_id_ppx)
+ (wrapped false)
+ (public_name react-intl-auto-id-ppx.lib)
+ (kind ppx_rewriter)
+ (libraries ocaml-migrate-parsetree)
+ )
