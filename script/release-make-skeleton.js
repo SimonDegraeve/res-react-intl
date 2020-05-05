@@ -29,6 +29,7 @@ function removeSync(p) {
 const src = path.resolve(path.join(__dirname, '..'))
 const dst = path.resolve(path.join(__dirname, '..', '_release'))
 
+mkdirpSync(dst)
 removeSync(dst)
 mkdirpSync(dst)
 
