@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const esy = require('../esy.json')
 
-console.log('Using esy.json:', esy)
+console.log(`Using esy.json:\n${esy}`)
 
 const filesToCopy = ['LICENSE', 'README.md', 'js/index.js']
 
@@ -23,7 +23,7 @@ function mkdirpSync(p) {
 }
 
 function removeSync(p) {
-  exec(`rm -rf "${p}"`)
+  exec(`rm -rf -i "${p}"`)
 }
 
 const src = path.resolve(path.join(__dirname, '..'))

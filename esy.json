@@ -1,7 +1,7 @@
 {
   "name": "react-intl-auto-id-ppx",
   "version": "1.0.0",
-  "description": "Reason PPX that generate Ids for ReactIntl messages",
+  "description": "Reason/OCaml PPX generating ReactIntl `id` from `defaultMessage`",
   "author": "Simon Degraeve <simon.degraeve@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/SimonDegraeve/react-intl-auto-id-ppx",
