@@ -57,7 +57,7 @@ And add the PPX in your `bsconfig.json` file:
 
 ```json
 {
-  "ppx-flags": ["react-intl-auto-id-ppx/ppx"]
+  "ppx-flags": ["react-intl-auto-id-ppx/react-intl-auto-id-ppx"]
 }
 ```
 
