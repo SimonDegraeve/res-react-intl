@@ -1,6 +1,6 @@
 # react-intl-auto-id-ppx
 
-[![Actions Status](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/workflows/CI/badge.svg)](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/actions)
+[![Actions Status](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/workflows/react-intl-auto-id-ppx pipeline/badge.svg)](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/actions)
 [![NPM Version](https://badge.fury.io/js/react-intl-auto-id-ppx.svg)](https://badge.fury.io/js/react-intl-auto-id-ppx)
 
 Reason/OCaml PPX for generating [ReactIntl](https://github.com/formatjs/formatjs) `id` from `defaultMessage`.
