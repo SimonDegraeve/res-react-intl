@@ -61,6 +61,11 @@ And add the PPX in your `bsconfig.json` file:
 }
 ```
 
+## TODO
+
+- Support `[@intl.messages]`
+- Support `(ReactIntl.)defineMessages`
+
 ## Developing
 
 After cloning the repository, you should run both `esy` and `yarn` to install
