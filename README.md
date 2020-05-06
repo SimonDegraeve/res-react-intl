@@ -5,6 +5,8 @@
 
 Reason/OCaml PPX generating [ReactIntl](https://github.com/formatjs/formatjs) `id` _(short MD5)_ from `defaultMessage`.
 
+This package provides also bindings overrides from [bs-react-intl](https://github.com/reasonml-community/bs-react-intl).
+
 ## Example
 
 Input:
