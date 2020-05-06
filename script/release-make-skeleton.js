@@ -69,6 +69,7 @@ const pkgJson = {
     'postinstall.js',
     'react-intl-auto-id-ppx.exe',
     'vendors/',
+    'bsconfig.json',
   ],
 }
 
