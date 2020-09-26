@@ -34,7 +34,10 @@ let hasIntlAttribute = (items: structure) => {
   items
   |> List.exists(item =>
        switch (item) {
-       | {pstr_desc: Pstr_attribute(({txt: "intl.messages", _}, PStr([])))} =>
+       | {
+           pstr_desc: Pstr_attribute(({txt: "intl.messages", _}, PStr([]))),
+           _,
+         } =>
          true
        | _ => false
        }
@@ -93,8 +96,8 @@ let extractMessageFromRecord = fields => {
   |> List.iter(assoc =>
        switch (assoc) {
        | (
-           {txt: Lident(key)},
-           {pexp_desc: Pexp_constant(Pconst_string(value, _))},
+           {txt: Lident(key), _},
+           {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
          ) =>
          map := map^ |> StringMap.add(key, value)
        | _ => ()
@@ -157,9 +160,10 @@ let structure = (mapper, structure) =>
              |> List.map(valueBinding =>
                   switch (valueBinding) {
                   | {
-                      pvb_pat: {ppat_desc: Ppat_var(_)} as pattern,
+                      pvb_pat: {ppat_desc: Ppat_var(_), _} as pattern,
                       pvb_expr:
-                        {pexp_desc: Pexp_record(fields, None)} as expr,
+                        {pexp_desc: Pexp_record(fields, None), _} as expr,
+                      _,
                     } =>
                     let map = extractMessageFromRecord(fields);
                     let defaultMessage =
