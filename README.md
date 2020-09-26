@@ -15,6 +15,11 @@ Input:
 // Demo.re
 open ReactIntl;
 
+module Msg = {
+  [@intl.messages];
+  let hello = {defaultMessage: "Hello"};
+};
+
 [@react.component]
 let make = () => {
   <FormattedMessage defaultMessage="Some default message" />;
@@ -31,6 +36,13 @@ Output:
 var React = require('react')
 var ReactIntl = require('react-intl')
 
+var Msg = {
+  hello: {
+    id: '_8b1a9953',
+    defaultMessage: 'Hello',
+  },
+}
+
 function Demo(Props) {
   return React.createElement(ReactIntl.FormattedMessage, {
     id: '_0beb880a',
@@ -40,6 +52,7 @@ function Demo(Props) {
 
 var make = Demo
 
+exports.Msg = Msg
 exports.make = make
 ```
 
@@ -62,11 +75,6 @@ And add the PPX in your `bsconfig.json` file:
   "ppx-flags": ["react-intl-auto-id-ppx/react-intl-auto-id-ppx"]
 }
 ```
-
-## TODO
-
-- Support `[@intl.messages]`
-- Support `(ReactIntl.)defineMessages`
 
 ## Developing
 

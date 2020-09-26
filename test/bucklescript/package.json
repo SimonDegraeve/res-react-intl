@@ -2,23 +2,23 @@
   "name": "bucklescript",
   "version": "0.0.0",
   "scripts": {
-    "build": "bsb -make-world",
+    "build": "bsb -clean-world -make-world",
     "watch": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "jest --passWithNoTests",
     "start": "yarn test"
   },
   "dependencies": {
-    "@glennsl/bs-jest": "^0.4.10",
-    "bs-platform": "7.2.2",
-    "bs-react-intl": "^1.1.0",
-    "bs-react-testing-library": "^0.6.0",
-    "jest": "^25.1.0",
-    "minimist": "^1.2.3",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-intl": "^4.5.2",
-    "reason-react": "^0.7.0"
+    "@glennsl/bs-jest": "^0.5.1",
+    "bs-platform": "8.3.0",
+    "bs-react-intl": "^2.0.0",
+    "bs-react-testing-library": "^0.7.3",
+    "jest": "^26.4.2",
+    "minimist": "^1.2.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-intl": "^5.8.3",
+    "reason-react": "^0.9.1"
   },
   "jest": {
     "testMatch": [

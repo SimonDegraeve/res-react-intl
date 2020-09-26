@@ -3,11 +3,17 @@
   "reason": {
     "react-jsx": 3
   },
-  "sources": {
-    "dir": "src",
-    "subdirs": true,
-    "type": "dev"
-  },
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true,
+      "type": "dev"
+    },
+    {
+      "dir": "../../vendors",
+      "subdirs": true
+    }
+  ],
   "package-specs": [
     {
       "module": "commonjs",
@@ -19,5 +25,9 @@
   "namespace": true,
   "bs-dependencies": ["reason-react", "bs-react-intl"],
   "bs-dev-dependencies": ["@glennsl/bs-jest", "bs-react-testing-library"],
-  "refmt": 3
+  "refmt": 3,
+  "warnings": {
+    "number": "-44-102-103-101",
+    "error": "+5"
+  }
 }
