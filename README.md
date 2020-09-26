@@ -63,15 +63,16 @@ exports.make = make
 Install the PPX with `yarn` or `npm`
 
 ```bash
-yarn add --dev react-intl-auto-id-ppx
+yarn add react-intl-auto-id-ppx
 # Or
-npm install --dev react-intl-auto-id-ppx
+npm install react-intl-auto-id-ppx
 ```
 
 And add the PPX in your `bsconfig.json` file:
 
 ```json
 {
+  "bs-dependencies": ["react-intl-auto-id-ppx"],
   "ppx-flags": ["react-intl-auto-id-ppx/react-intl-auto-id-ppx"]
 }
 ```
