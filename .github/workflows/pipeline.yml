@@ -69,46 +69,41 @@ jobs:
         shell: bash
         run: |
           # from https://stackoverflow.com/a/24848739/617787
-          s=$(pwd); d=$(dirname $(esy x which res-react-intl-ppx));
+          s=$(pwd); d=$(dirname $(esy x which ppx));
           while [ "${d#$s/}" == "${d}" ]
           do s=$(dirname $s);b="../${b}"; done;
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-ppx.exe
+            ESY__BINARY_PATH=${b}${d#$s/}/ppx.exe
           else
-            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-ppx
+            ESY__BINARY_PATH=${b}${d#$s/}/ppx
           fi
           echo "ESY__BINARY_PATH: $ESY__BINARY_PATH"
           echo "##[set-output name=path;]$ESY__BINARY_PATH"
-
-      - name: Upload artifacts for ${{ matrix.os }} [Ppx]
-        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-artifact@master
-        with:
-          name: ${{ matrix.os }}-ppx
-          path: ${{ steps.esy_binary_path_ppx.outputs.path }}
 
       - name: Get Esy binary path [Extract]
         id: esy_binary_path_extract
         shell: bash
         run: |
           # from https://stackoverflow.com/a/24848739/617787
-          s=$(pwd); d=$(dirname $(esy x which res-react-intl-extract));
+          s=$(pwd); d=$(dirname $(esy x which extract));
           while [ "${d#$s/}" == "${d}" ]
           do s=$(dirname $s);b="../${b}"; done;
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-extract.exe
+            ESY__BINARY_PATH=${b}${d#$s/}/extract.exe
           else
-            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-extract
+            ESY__BINARY_PATH=${b}${d#$s/}/extract
           fi
           echo "ESY__BINARY_PATH: $ESY__BINARY_PATH"
           echo "##[set-output name=path;]$ESY__BINARY_PATH"
 
-      - name: Upload artifacts for ${{ matrix.os }} [Extract]
+      - name: Upload artifacts for ${{ matrix.os }}
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
-          name: ${{ matrix.os }}-extract
-          path: ${{ steps.esy_binary_path_extract.outputs.path }}
+          name: ${{ matrix.os }}
+          path: |
+            ${{ steps.esy_binary_path_ppx.outputs.path }}
+            ${{ steps.esy_binary_path_extract.outputs.path }}
 
   publish:
     needs: build_and_test
@@ -126,41 +121,23 @@ jobs:
       - name: Make NPM release skeleton
         run: node script/release-make-skeleton.js
 
-      - name: Download linux artifacts [Ppx]
+      - name: Download linux artifacts
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-latest-ppx
-          path: _release/platform-linux-x64/ppx
+          name: ubuntu-latest
+          path: _release/platform-linux-x64
 
-      - name: Download macOS artifacts [Ppx]
+      - name: Download macOS artifacts
         uses: actions/download-artifact@master
         with:
-          name: macos-latest-ppx
-          path: _release/platform-darwin-x64/ppx
+          name: macos-latest
+          path: _release/platform-darwin-x64
 
-      - name: Download windows artifacts [Ppx]
+      - name: Download windows artifacts
         uses: actions/download-artifact@master
         with:
-          name: windows-latest-ppx
-          path: _release/platform-windows-x64/ppx
-
-      - name: Download linux artifacts [Extract]
-        uses: actions/download-artifact@master
-        with:
-          name: ubuntu-latest-extract
-          path: _release/platform-linux-x64/extract
-
-      - name: Download macOS artifacts [Extract]
-        uses: actions/download-artifact@master
-        with:
-          name: macos-latest-extract
-          path: _release/platform-darwin-x64/extract
-
-      - name: Download windows artifacts [Extract]
-        uses: actions/download-artifact@master
-        with:
-          name: windows-latest-extract
-          path: _release/platform-windows-x64/extract
+          name: windows-latest
+          path: _release/platform-windows-x64
 
       - name: Create archives for Github release
         run: |
