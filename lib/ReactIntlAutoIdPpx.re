@@ -5,8 +5,6 @@ open Parsetree;
 open Asttypes;
 open Longident;
 
-module StringMap = Map.Make(String);
-
 let generateId = value => {
   "_" ++ (value |> Digest.string |> Digest.to_hex |> String.sub(_, 0, 8));
 };
@@ -201,7 +199,7 @@ let mapper = (_, _) => {...default_mapper, expr, structure};
 
 let () =
   Driver.register(
-    ~name="res_react_intl",
+    ~name="ReactIntlAutoId",
     ~args=[],
     Versions.ocaml_406,
     mapper,

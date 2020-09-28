@@ -6,8 +6,8 @@ let extract = (~duplicatesAllowed=false, paths) => {
   let messages = ref(StringMap.empty);
 
   let iterator =
-    ExtractionIterator.getIterator(message => {
-      let {Message.id, defaultMessage} = message;
+    ExtractorIterator.getIterator(message => {
+      let {Message.id, defaultMessage, _} = message;
 
       switch (messages^ |> StringMap.find_opt(id)) {
       | None => messages := messages^ |> StringMap.add(id, message)
