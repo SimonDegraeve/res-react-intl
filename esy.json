@@ -6,6 +6,7 @@
   "license": "MIT",
   "homepage": "https://github.com/SimonDegraeve/res-react-intl",
   "bugs": { "url": "https://github.com/SimonDegraeve/res-react-intl/issues" },
+  "keywords": ["react-intl", "ppx", "reason-react", "rescript"],
   "repository": {
     "type": "git",
     "url": "https://github.com/SimonDegraeve/res-react-intl.git"

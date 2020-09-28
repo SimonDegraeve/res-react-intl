@@ -56,6 +56,7 @@ const pkgJson = {
   homepage: esy.homepage,
   license: esy.license,
   repository: esy.repository,
+  keywords: esy.keywords,
   scripts: {
     postinstall: 'node postinstall.js',
   },
