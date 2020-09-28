@@ -1,14 +1,14 @@
 {
-  "name": "react-intl-auto-id-ppx",
+  "name": "res-react-intl",
   "version": "2.0.1",
   "description": "Reason/OCaml PPX generating ReactIntl `id` from `defaultMessage`",
   "author": "Simon Degraeve <simon.degraeve@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/SimonDegraeve/react-intl-auto-id-ppx",
-  "bugs": { "url": "https://github.com/SimonDegraeve/react-intl-auto-id-ppx/issues" },
+  "homepage": "https://github.com/SimonDegraeve/res-react-intl",
+  "bugs": { "url": "https://github.com/SimonDegraeve/res-react-intl/issues" },
   "repository": {
     "type": "git",
-    "url": "https://github.com/SimonDegraeve/react-intl-auto-id-ppx.git"
+    "url": "https://github.com/SimonDegraeve/res-react-intl.git"
   },
   "esy": {
     "build": "dune build -p #{self.name}",

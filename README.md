@@ -1,7 +1,7 @@
-# react-intl-auto-id-ppx
+# res-react-intl
 
-[![Actions Status](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/workflows/react-intl-auto-id-ppx%20pipeline/badge.svg)](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/actions)
-[![NPM Version](https://badge.fury.io/js/react-intl-auto-id-ppx.svg)](https://badge.fury.io/js/react-intl-auto-id-ppx)
+[![Actions Status](https://github.com/SimonDegraeve/res-react-intl/workflows/res-react-intl%20pipeline/badge.svg)](https://github.com/SimonDegraeve/res-react-intl/actions)
+[![NPM Version](https://badge.fury.io/js/res-react-intl.svg)](https://badge.fury.io/js/res-react-intl)
 
 Reason/OCaml PPX generating [ReactIntl](https://github.com/formatjs/formatjs) `id` _(short MD5)_ from `defaultMessage`.
 
@@ -63,24 +63,24 @@ exports.make = make
 Install the PPX with `yarn` or `npm`
 
 ```bash
-yarn add react-intl-auto-id-ppx
+yarn add res-react-intl
 # Or
-npm install react-intl-auto-id-ppx
+npm install res-react-intl
 ```
 
 And add the PPX in your `bsconfig.json` file:
 
 ```json
 {
-  "bs-dependencies": ["react-intl-auto-id-ppx"],
-  "ppx-flags": ["react-intl-auto-id-ppx/react-intl-auto-id-ppx"]
+  "bs-dependencies": ["res-react-intl"],
+  "ppx-flags": ["res-react-intl/res-react-intl"]
 }
 ```
 
 ## Developing
 
 After cloning the repository, you should run both `esy` and `yarn` to install
-dependencies. `react-intl-auto-id-ppx` uses `esy` for managing the important dependencies,
+dependencies. `res-react-intl` uses `esy` for managing the important dependencies,
 and `yarn` is used solely for pre-commit linting/formatting of Reason files.
 
 ### Relevant commands
@@ -101,7 +101,7 @@ $ git tag vx.y.z
 $ git push origin vx.y.z
 ```
 
-3. [Create detailed release notes](https://github.com/SimonDegraeve/react-intl-auto-id-ppx/releases) for the new version, following the `Added/Changed/Fixed/Removed` format. Note that the new version of the PPX will automatically be pushed to NPM and a release will be created on GitHub.
+3. [Create detailed release notes](https://github.com/SimonDegraeve/res-react-intl/releases) for the new version, following the `Added/Changed/Fixed/Removed` format. Note that the new version of the PPX will automatically be pushed to NPM and a release will be created on GitHub.
 
 ## Background/Sources
 

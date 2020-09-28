@@ -1,10 +1,10 @@
 {
   "checksum": "d9649e8e832111824e575eafd6eb961c",
-  "root": "react-intl-auto-id-ppx@link-dev:./esy.json",
+  "root": "res-react-intl@link-dev:./esy.json",
   "node": {
-    "react-intl-auto-id-ppx@link-dev:./esy.json": {
-      "id": "react-intl-auto-id-ppx@link-dev:./esy.json",
-      "name": "react-intl-auto-id-ppx",
+    "res-react-intl@link-dev:./esy.json": {
+      "id": "res-react-intl@link-dev:./esy.json",
+      "name": "res-react-intl",
       "version": "link-dev:./esy.json",
       "source": { "type": "link-dev", "path": ".", "manifest": "esy.json" },
       "overrides": [],

@@ -1,4 +1,4 @@
-name: react-intl-auto-id-ppx pipeline
+name: res-react-intl pipeline
 
 on: 
   push:
@@ -69,13 +69,13 @@ jobs:
         shell: bash
         run: |
           # from https://stackoverflow.com/a/24848739/617787
-          s=$(pwd); d=$(dirname $(esy x which react-intl-auto-id-ppx));
+          s=$(pwd); d=$(dirname $(esy x which res-react-intl));
           while [ "${d#$s/}" == "${d}" ]
           do s=$(dirname $s);b="../${b}"; done;
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            ESY__BINARY_PATH=${b}${d#$s/}/react-intl-auto-id-ppx.exe
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl.exe
           else
-            ESY__BINARY_PATH=${b}${d#$s/}/react-intl-auto-id-ppx
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl
           fi
           echo "ESY__BINARY_PATH: $ESY__BINARY_PATH"
           echo "##[set-output name=path;]$ESY__BINARY_PATH"
@@ -124,15 +124,15 @@ jobs:
       - name: Create archives for Github release
         run: |
           cd _release/platform-darwin-x64
-          zip -r ../../react-intl-auto-id-ppx-darwin-x64.zip .
+          zip -r ../../res-react-intl-darwin-x64.zip .
           cd ../..
 
           cd _release/platform-linux-x64
-          zip -r ../../react-intl-auto-id-ppx-linux-x64.zip .
+          zip -r ../../res-react-intl-linux-x64.zip .
           cd ../..
 
           cd _release/platform-windows-x64
-          zip -r ../../react-intl-auto-id-ppx-windows-x64.zip .
+          zip -r ../../res-react-intl-windows-x64.zip .
           cd ../..
       
       - name: Create GitHub release
@@ -146,34 +146,34 @@ jobs:
           draft: false
           prerelease: false
         
-      - name: Upload react-intl-auto-id-ppx-darwin-x64.zip to Github release 
+      - name: Upload res-react-intl-darwin-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-darwin-x64.zip
-          asset_name: react-intl-auto-id-ppx-darwin-x64.zip
+          asset_path: res-react-intl-darwin-x64.zip
+          asset_name: res-react-intl-darwin-x64.zip
           asset_content_type: application/gzip
 
-      - name: Upload react-intl-auto-id-ppx-linux-x64.zip to Github release 
+      - name: Upload res-react-intl-linux-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-linux-x64.zip
-          asset_name: react-intl-auto-id-ppx-linux-x64.zip
+          asset_path: res-react-intl-linux-x64.zip
+          asset_name: res-react-intl-linux-x64.zip
           asset_content_type: application/gzip
 
-      - name: Upload react-intl-auto-id-ppx-windows-x64.zip to Github release 
+      - name: Upload res-react-intl-windows-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-windows-x64.zip
-          asset_name: react-intl-auto-id-ppx-windows-x64.zip
+          asset_path: res-react-intl-windows-x64.zip
+          asset_name: res-react-intl-windows-x64.zip
           asset_content_type: application/gzip
 
       - name: Publish NPM package

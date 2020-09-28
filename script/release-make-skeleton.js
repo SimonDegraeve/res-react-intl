@@ -41,7 +41,7 @@ for (const file of filesToCopy) {
 
 fs.copyFileSync(path.join(src, 'script', 'release-postinstall.js'), path.join(dst, 'postinstall.js'))
 
-const filesToTouch = ['react-intl-auto-id-ppx.exe']
+const filesToTouch = ['res-react-intl.exe']
 
 for (const file of filesToTouch) {
   const p = path.join(dst, file)
@@ -50,7 +50,7 @@ for (const file of filesToTouch) {
 }
 
 const pkgJson = {
-  name: 'react-intl-auto-id-ppx',
+  name: 'res-react-intl',
   version: esy.version,
   description: esy.description,
   homepage: esy.homepage,
@@ -60,14 +60,14 @@ const pkgJson = {
     postinstall: 'node postinstall.js',
   },
   bin: {
-    'react-intl-auto-id-ppx': 'react-intl-auto-id-ppx.exe',
+    'res-react-intl': 'res-react-intl.exe',
   },
   files: [
     'platform-windows-x64/',
     'platform-linux-x64/',
     'platform-darwin-x64/',
     'postinstall.js',
-    'react-intl-auto-id-ppx.exe',
+    'res-react-intl.exe',
     'vendors/',
     'bsconfig.json',
   ],

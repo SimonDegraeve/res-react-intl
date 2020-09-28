@@ -1,6 +1,6 @@
 
 (library
-  (name ReactIntlAutoIdPpxTestNativeLib)
+  (name ResReactIntlTestNativeLib)
   (library_flags (-linkall -g))
-  (libraries fmt rely.lib react-intl-auto-id-ppx.lib)
+  (libraries fmt rely.lib res-react-intl.lib)
 )

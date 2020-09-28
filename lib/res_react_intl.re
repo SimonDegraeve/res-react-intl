@@ -201,7 +201,7 @@ let mapper = (_, _) => {...default_mapper, expr, structure};
 
 let () =
   Driver.register(
-    ~name="react_intl_auto_id_ppx",
+    ~name="res_react_intl",
     ~args=[],
     Versions.ocaml_406,
     mapper,
