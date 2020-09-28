@@ -7,14 +7,91 @@ let generateId = value => {
   "_" ++ (value |> Digest.string |> Digest.to_hex |> String.sub(_, 0, 8));
 };
 
+let replaceIdFromLabels = labels => {
+  let id = ref("");
+  labels
+  |> List.fold_left(
+       (acc, assoc) =>
+         switch (assoc) {
+         | (
+             Labelled(key),
+             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+           )
+             when key == "id" =>
+           id.contents = value;
+           acc;
+         | (
+             Labelled(key),
+             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+           ) as label
+             when key == "defaultMessage" =>
+           id.contents = id.contents == "" ? value : id.contents;
+           List.append(acc, [label]);
+         | _ as label => List.append(acc, [label])
+         },
+       [],
+     )
+  |> List.append(
+       {
+         [
+           (
+             Labelled("id"),
+             id.contents
+             |> generateId
+             |> Ast_helper.Const.string
+             |> Ast_helper.Exp.constant,
+           ),
+         ];
+       },
+     );
+};
+
+let replaceIdFromRecord =
+    (fields: list((Asttypes.loc(Longident.t), Parsetree.expression))) => {
+  let id = ref("");
+
+  fields
+  |> List.fold_left(
+       (acc, assoc) =>
+         switch ((assoc: (Asttypes.loc(Longident.t), Parsetree.expression))) {
+         | (
+             {txt: Lident(key), _},
+             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+           )
+             when key == "id" =>
+           id.contents = value;
+           acc;
+         | (
+             {txt: Lident(key), _},
+             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+           ) as field
+             when key == "id" =>
+           id.contents = id.contents == "" ? value : id.contents;
+           List.append(acc, [field]);
+         | _ as field => List.append(acc, [field])
+         },
+       [],
+     )
+  |> List.append([
+       (
+         {txt: Lident("id"), loc: Ast_helper.default_loc.contents},
+         id.contents
+         |> generateId
+         |> Ast_helper.Const.string
+         |> Ast_helper.Exp.constant,
+       ),
+     ]);
+};
+
 let extractMessageFromLabels = (callback, labels) => {
   let map =
     labels
+    |> replaceIdFromLabels
     |> List.fold_left(
          (map, assoc) =>
            switch (assoc) {
            | (
-               Asttypes.Labelled(key),
+               Labelled(key),
                {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
              ) =>
              map |> StringMap.add(key, value)
@@ -32,6 +109,7 @@ let extractMessageFromLabels = (callback, labels) => {
 let extractMessageFromRecord = (callback, fields) => {
   let map =
     fields
+    |> replaceIdFromRecord
     |> List.fold_left(
          (map, field) =>
            switch (field) {

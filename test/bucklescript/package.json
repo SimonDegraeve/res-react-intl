@@ -7,7 +7,7 @@
     "clean": "bsb -clean-world",
     "test": "jest --passWithNoTests",
     "start": "yarn test",
-    "extract": "../../_build/default/bin/Extract.exe src"
+    "extract": "../../_build/default/bin/Extract.exe --allow-duplicates src"
   },
   "dependencies": {
     "@glennsl/bs-jest": "^0.5.1",
