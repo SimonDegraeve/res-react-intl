@@ -13,7 +13,8 @@ let printExpression = (expr: expression) =>
   Printast.expression(0, Format.str_formatter, expr);
 
 let replaceIdFromLabels = labels => {
-  let id = ref("");
+  let id = ref(`None);
+
   labels
   |> List.fold_left(
        (acc, assoc) =>
@@ -23,14 +24,20 @@ let replaceIdFromLabels = labels => {
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
            )
              when key == "id" =>
-           id.contents = value;
+           id.contents = `Id(value);
+
            acc;
          | (
              Labelled(key),
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
            ) as label
              when key == "defaultMessage" =>
-           id.contents = id.contents == "" ? value : id.contents;
+           id.contents = (
+             switch (id.contents) {
+             | `None => `Message(value)
+             | value => value
+             }
+           );
            List.append(acc, [label]);
          | label => List.append(acc, [label])
          },
@@ -41,8 +48,13 @@ let replaceIdFromLabels = labels => {
          [
            (
              Labelled("id"),
-             id.contents
-             |> generateId
+             (
+               switch (id.contents) {
+               | `Message(value) => value |> generateId
+               | `Id(value) => value
+               | `None => ""
+               }
+             )
              |> Ast_helper.Const.string
              |> Ast_helper.Exp.constant,
            ),
@@ -53,7 +65,7 @@ let replaceIdFromLabels = labels => {
 
 let replaceIdFromRecord =
     (fields: list((Asttypes.loc(Longident.t), expression))) => {
-  let id = ref("");
+  let id = ref(`None);
 
   fields
   |> List.fold_left(
@@ -64,14 +76,19 @@ let replaceIdFromRecord =
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
            )
              when key == "id" =>
-           id.contents = value;
+           id.contents = `Id(value);
            acc;
          | (
              {txt: Lident(key), _},
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
            ) as field
              when key == "defaultMessage" =>
-           id.contents = id.contents == "" ? value : id.contents;
+           id.contents = (
+             switch (id.contents) {
+             | `None => `Message(value)
+             | value => value
+             }
+           );
            List.append(acc, [field]);
          | field => List.append(acc, [field])
          },
@@ -80,8 +97,13 @@ let replaceIdFromRecord =
   |> List.append([
        (
          {txt: Lident("id"), loc: Ast_helper.default_loc.contents},
-         id.contents
-         |> generateId
+         (
+           switch (id.contents) {
+           | `Message(value) => value |> generateId
+           | `Id(value) => value
+           | `None => ""
+           }
+         )
          |> Ast_helper.Const.string
          |> Ast_helper.Exp.constant,
        ),
