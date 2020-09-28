@@ -1,6 +1,6 @@
 (executables
-  (names Bin Extract)
-  (public_names res-react-intl.ppx res-react-intl.extract)
+  (names Ppx Extract)
+  (public_names res-react-intl-ppx res-react-intl-extract)
   (libraries res-react-intl.lib)
   (ocamlopt_flags ( -linkall ))
   (package res-react-intl)

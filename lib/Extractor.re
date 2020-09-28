@@ -5,8 +5,8 @@ exception DefaultMessageNotMatching(string);
 let extract = (~duplicatesAllowed=false, paths) => {
   let messages = ref(StringMap.empty);
 
-  let iterator =
-    ExtractorIterator.getIterator(message => {
+  let mapper =
+    Mapper.getMapper(message => {
       let {Message.id, defaultMessage, _} = message;
 
       switch (messages^ |> StringMap.find_opt(id)) {
@@ -28,7 +28,7 @@ let extract = (~duplicatesAllowed=false, paths) => {
       };
     });
 
-  let extractMessages = ast => iterator.structure(iterator, ast);
+  let extractMessages = ast => mapper.structure(mapper, ast);
 
   let processReasonFile = path => {
     let channel = open_in_bin(path);
@@ -39,7 +39,7 @@ let extract = (~duplicatesAllowed=false, paths) => {
       );
     close_in(channel);
 
-    extractMessages(ast);
+    extractMessages(ast) |> ignore;
   };
 
   let rec processPath = path => {

@@ -1,4 +1,6 @@
-open Ast_iterator;
+open Migrate_parsetree;
+open Ast_406;
+open Ast_mapper;
 open Asttypes;
 open Parsetree;
 open Longident;
@@ -6,6 +8,9 @@ open Longident;
 let generateId = value => {
   "_" ++ (value |> Digest.string |> Digest.to_hex |> String.sub(_, 0, 8));
 };
+
+let printExpression = (expr: expression) =>
+  Printast.expression(0, Format.str_formatter, expr);
 
 let replaceIdFromLabels = labels => {
   let id = ref("");
@@ -27,7 +32,7 @@ let replaceIdFromLabels = labels => {
              when key == "defaultMessage" =>
            id.contents = id.contents == "" ? value : id.contents;
            List.append(acc, [label]);
-         | _ as label => List.append(acc, [label])
+         | label => List.append(acc, [label])
          },
        [],
      )
@@ -47,13 +52,13 @@ let replaceIdFromLabels = labels => {
 };
 
 let replaceIdFromRecord =
-    (fields: list((Asttypes.loc(Longident.t), Parsetree.expression))) => {
+    (fields: list((Asttypes.loc(Longident.t), expression))) => {
   let id = ref("");
 
   fields
   |> List.fold_left(
        (acc, assoc) =>
-         switch ((assoc: (Asttypes.loc(Longident.t), Parsetree.expression))) {
+         switch ((assoc: (Asttypes.loc(Longident.t), expression))) {
          | (
              {txt: Lident(key), _},
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
@@ -65,10 +70,10 @@ let replaceIdFromRecord =
              {txt: Lident(key), _},
              {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
            ) as field
-             when key == "id" =>
+             when key == "defaultMessage" =>
            id.contents = id.contents == "" ? value : id.contents;
            List.append(acc, [field]);
-         | _ as field => List.append(acc, [field])
+         | field => List.append(acc, [field])
          },
        [],
      )
@@ -83,10 +88,11 @@ let replaceIdFromRecord =
      ]);
 };
 
-let extractMessageFromLabels = (callback, labels) => {
+let extractMessageFromLabels = (labels, callback) => {
+  let labels = labels |> replaceIdFromLabels;
+
   let map =
     labels
-    |> replaceIdFromLabels
     |> List.fold_left(
          (map, assoc) =>
            switch (assoc) {
@@ -104,12 +110,15 @@ let extractMessageFromLabels = (callback, labels) => {
   | Some(value) => callback(value)
   | None => ()
   };
+
+  labels;
 };
 
-let extractMessageFromRecord = (callback, fields) => {
+let extractMessageFromRecord = (fields, callback) => {
+  let fields = fields |> replaceIdFromRecord;
+
   let map =
     fields
-    |> replaceIdFromRecord
     |> List.fold_left(
          (map, field) =>
            switch (field) {
@@ -127,6 +136,8 @@ let extractMessageFromRecord = (callback, fields) => {
   | Some(value) => callback(value)
   | None => ()
   };
+
+  fields;
 };
 
 let hasIntlAttribute = (items: structure) =>
@@ -140,30 +151,56 @@ let hasIntlAttribute = (items: structure) =>
      );
 
 let extractMessagesFromValueBindings =
-    (callback, valueBindings: list(value_binding)) =>
+    (mapper, valueBindings: list(value_binding), callback) =>
   valueBindings
-  |> List.iter(valueBinding =>
+  |> List.map(valueBinding =>
        switch (valueBinding) {
        | {
-           pvb_pat: {ppat_desc: Ppat_var(_), _},
-           pvb_expr: {pexp_desc: Pexp_record(fields, None), _},
+           pvb_pat: {ppat_desc: Ppat_var(_), _} as pattern,
+           pvb_expr: {pexp_desc: Pexp_record(fields, None), _} as expr,
            _,
          } =>
-         extractMessageFromRecord(callback, fields)
-       | _ => ()
+         Ast_helper.Vb.mk(
+           ~attrs=valueBinding.pvb_attributes,
+           ~loc=valueBinding.pvb_loc,
+           pattern,
+           Ast_helper.Exp.record(
+             ~attrs=expr.pexp_attributes,
+             ~loc=expr.pexp_loc,
+             extractMessageFromRecord(fields, callback),
+             None,
+           ),
+         )
+       | _ => default_mapper.value_binding(mapper, valueBinding)
        }
      );
 
-let extractMessagesFromModule = (callback, items: structure) =>
+let extractMessagesFromModule = (mapper, items: structure, callback) =>
   if (hasIntlAttribute(items)) {
-    items
-    |> List.iter(item =>
-         switch (item) {
-         | {pstr_desc: Pstr_value(Nonrecursive, valueBindings), _} =>
-           extractMessagesFromValueBindings(callback, valueBindings)
-         | _ => ()
-         }
-       );
+    default_mapper.structure(
+      mapper,
+      items
+      |> List.map(item =>
+           switch (item) {
+           | {
+               pstr_desc: Pstr_value(Nonrecursive, valueBindings),
+               pstr_loc: loc,
+             } =>
+             Ast_helper.Str.value(
+               ~loc,
+               Nonrecursive,
+               extractMessagesFromValueBindings(
+                 mapper,
+                 valueBindings,
+                 callback,
+               ),
+             )
+           | _ => default_mapper.structure_item(mapper, item)
+           }
+         ),
+    );
+  } else {
+    default_mapper.structure(mapper, items);
   };
 
 let matchesFormattedMessage = ident =>
@@ -173,29 +210,35 @@ let matchesFormattedMessage = ident =>
   | _ => false
   };
 
-let getIterator = (callback: Message.t => unit): Ast_iterator.iterator => {
-  ...default_iterator,
+let getMapper = (callback: Message.t => unit): mapper => {
+  ...default_mapper,
 
   // Match records in modules with [@intl.messages]
   // (structure is the module body - either top level or of a submodule)
-  structure: (iterator, structure) => {
-    extractMessagesFromModule(callback, structure);
-    default_iterator.structure(iterator, structure);
+  structure: (mapper, structure) => {
+    extractMessagesFromModule(mapper, structure, callback);
   },
 
-  expr: (iterator, expr) => {
+  expr: (mapper, expr) => {
     switch (expr) {
     // Match (ReactIntl.)FormattedMessage.createElement
     | {
-        pexp_desc: Pexp_apply({pexp_desc: Pexp_ident({txt, _}), _}, labels),
+        pexp_desc:
+          Pexp_apply(
+            {pexp_desc: Pexp_ident({txt, _}), _} as applyExpr,
+            labels,
+          ),
         _,
       }
         when matchesFormattedMessage(txt) =>
-      extractMessageFromLabels(callback, labels)
+      Ast_helper.Exp.apply(
+        ~attrs=expr.pexp_attributes,
+        ~loc=expr.pexp_loc,
+        applyExpr,
+        extractMessageFromLabels(labels, callback),
+      )
 
-    | _ => ()
+    | _ => default_mapper.expr(mapper, expr)
     };
-
-    default_iterator.expr(iterator, expr);
   },
 };

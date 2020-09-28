@@ -63,26 +63,26 @@ The following snippet describes res-react-intl's repository structure.
 ```text
 .
 ├── .github/
-|   Contains Github specific files such as actions definitions and issue templates.
+│   Contains Github specific files such as actions definitions and issue templates.
 │
 ├── bin/
-|   Source for res-react-intl's binary. This links to the library defined in `lib/`.
+│   Source for res-react-intl's binaries. This links to the library defined in `lib/`.
 │
 ├── lib/
-|   Source for res-react-intl's library. Contains res-react-intl's core functionnalities.
+│   Source for res-react-intl's library. Contains res-react-intl's core functionnalities.
 │
 ├── test/
-|   Unit tests and integration tests for res-react-intl.
+│   Unit tests and integration tests for res-react-intl.
 │
 ├── dune-project
-|   Dune file used to mark the root of the project and define project-wide parameters.
-|   For the documentation of the syntax, see https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
+│   Dune file used to mark the root of the project and define project-wide parameters.
+│   For the documentation of the syntax, see https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
 │
 ├── LICENSE
 │
 ├── package.json
-|   Esy package definition.
-|   To know more about creating Esy packages, see https://esy.sh/docs/en/configuration.html.
+│   Esy package definition.
+│   To know more about creating Esy packages, see https://esy.sh/docs/en/configuration.html.
 │
 ├── README.md
 │

@@ -6,7 +6,7 @@ const fs = require('fs')
 
 const platform = process.platform
 
-const binariesToCopy = ['res-react-intl']
+const binariesToCopy = ['ppx', 'extract']
 
 function find_arch() {
   // The running binary is 64-bit, so the OS is clearly 64-bit.

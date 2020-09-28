@@ -73,8 +73,14 @@ And add the PPX in your `bsconfig.json` file:
 ```json
 {
   "bs-dependencies": ["res-react-intl"],
-  "ppx-flags": ["res-react-intl/res-react-intl"]
+  "ppx-flags": ["res-react-intl/ppx"]
 }
+```
+
+Extract the messages:
+
+```bash
+res-react-intl-extract --allow-duplicates src
 ```
 
 ## Developing
