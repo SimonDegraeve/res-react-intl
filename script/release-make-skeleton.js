@@ -41,7 +41,7 @@ for (const file of filesToCopy) {
 
 fs.copyFileSync(path.join(src, 'script', 'release-postinstall.js'), path.join(dst, 'postinstall.js'))
 
-const filesToTouch = ['ppx.exe', 'extract.exe']
+const filesToTouch = ['ppx.exe', 'ppx', 'extract.exe', 'extract']
 
 for (const file of filesToTouch) {
   const p = path.join(dst, file)
@@ -61,8 +61,10 @@ const pkgJson = {
     postinstall: 'node postinstall.js',
   },
   bin: {
-    'res-react-intl-ppx': 'ppx.exe',
-    'res-react-intl-extract': 'extract.exe',
+    'res-react-intl-ppx.exe': 'ppx.exe',
+    'res-react-intl-extract.exe': 'extract.exe',
+    'res-react-intl-ppx': 'ppx',
+    'res-react-intl-extract': 'extract',
   },
   files: [
     'platform-windows-x64/',
@@ -70,7 +72,9 @@ const pkgJson = {
     'platform-darwin-x64/',
     'postinstall.js',
     'ppx.exe',
+    'ppx',
     'extract.exe',
+    'extract',
     'vendors/',
     'bsconfig.json',
   ],
