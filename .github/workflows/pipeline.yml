@@ -1,4 +1,4 @@
-name: react-intl-auto-id-ppx pipeline
+name: res-react-intl pipeline
 
 on: 
   push:
@@ -64,28 +64,51 @@ jobs:
           yarn test
         working-directory: ./test/bucklescript
       
-      - name: Get Esy binary path
-        id: esy_binary_path
+      - name: Get Esy binary path [Ppx]
+        id: esy_binary_path_ppx
         shell: bash
         run: |
           # from https://stackoverflow.com/a/24848739/617787
-          s=$(pwd); d=$(dirname $(esy x which react-intl-auto-id-ppx));
+          s=$(pwd); d=$(dirname $(esy x which res-react-intl-ppx));
           while [ "${d#$s/}" == "${d}" ]
           do s=$(dirname $s);b="../${b}"; done;
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            ESY__BINARY_PATH=${b}${d#$s/}/react-intl-auto-id-ppx.exe
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-ppx.exe
           else
-            ESY__BINARY_PATH=${b}${d#$s/}/react-intl-auto-id-ppx
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-ppx
           fi
           echo "ESY__BINARY_PATH: $ESY__BINARY_PATH"
           echo "##[set-output name=path;]$ESY__BINARY_PATH"
 
-      - name: Upload artifacts for ${{ matrix.os }}
+      - name: Upload artifacts for ${{ matrix.os }} [Ppx]
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@master
         with:
-          name: ${{ matrix.os }}
-          path: ${{ steps.esy_binary_path.outputs.path }}
+          name: ${{ matrix.os }}-ppx
+          path: ${{ steps.esy_binary_path_ppx.outputs.path }}
+
+      - name: Get Esy binary path [Extract]
+        id: esy_binary_path_extract
+        shell: bash
+        run: |
+          # from https://stackoverflow.com/a/24848739/617787
+          s=$(pwd); d=$(dirname $(esy x which res-react-intl-extract));
+          while [ "${d#$s/}" == "${d}" ]
+          do s=$(dirname $s);b="../${b}"; done;
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-extract.exe
+          else
+            ESY__BINARY_PATH=${b}${d#$s/}/res-react-intl-extract
+          fi
+          echo "ESY__BINARY_PATH: $ESY__BINARY_PATH"
+          echo "##[set-output name=path;]$ESY__BINARY_PATH"
+
+      - name: Upload artifacts for ${{ matrix.os }} [Extract]
+        if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.os }}-extract
+          path: ${{ steps.esy_binary_path_extract.outputs.path }}
 
   publish:
     needs: build_and_test
@@ -103,36 +126,54 @@ jobs:
       - name: Make NPM release skeleton
         run: node script/release-make-skeleton.js
 
-      - name: Download linux artifacts
+      - name: Download linux artifacts [Ppx]
         uses: actions/download-artifact@master
         with:
-          name: ubuntu-latest
-          path: _release/platform-linux-x64
+          name: ubuntu-latest-ppx
+          path: _release/platform-linux-x64/ppx
 
-      - name: Download macOS artifacts
+      - name: Download macOS artifacts [Ppx]
         uses: actions/download-artifact@master
         with:
-          name: macos-latest
-          path: _release/platform-darwin-x64
+          name: macos-latest-ppx
+          path: _release/platform-darwin-x64/ppx
 
-      - name: Download windows artifacts
+      - name: Download windows artifacts [Ppx]
         uses: actions/download-artifact@master
         with:
-          name: windows-latest
-          path: _release/platform-windows-x64
+          name: windows-latest-ppx
+          path: _release/platform-windows-x64/ppx
+
+      - name: Download linux artifacts [Extract]
+        uses: actions/download-artifact@master
+        with:
+          name: ubuntu-latest-extract
+          path: _release/platform-linux-x64/extract
+
+      - name: Download macOS artifacts [Extract]
+        uses: actions/download-artifact@master
+        with:
+          name: macos-latest-extract
+          path: _release/platform-darwin-x64/extract
+
+      - name: Download windows artifacts [Extract]
+        uses: actions/download-artifact@master
+        with:
+          name: windows-latest-extract
+          path: _release/platform-windows-x64/extract
 
       - name: Create archives for Github release
         run: |
           cd _release/platform-darwin-x64
-          zip -r ../../react-intl-auto-id-ppx-darwin-x64.zip .
+          zip -r ../../res-react-intl-darwin-x64.zip .
           cd ../..
 
           cd _release/platform-linux-x64
-          zip -r ../../react-intl-auto-id-ppx-linux-x64.zip .
+          zip -r ../../res-react-intl-linux-x64.zip .
           cd ../..
 
           cd _release/platform-windows-x64
-          zip -r ../../react-intl-auto-id-ppx-windows-x64.zip .
+          zip -r ../../res-react-intl-windows-x64.zip .
           cd ../..
       
       - name: Create GitHub release
@@ -146,34 +187,34 @@ jobs:
           draft: false
           prerelease: false
         
-      - name: Upload react-intl-auto-id-ppx-darwin-x64.zip to Github release 
+      - name: Upload res-react-intl-darwin-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-darwin-x64.zip
-          asset_name: react-intl-auto-id-ppx-darwin-x64.zip
+          asset_path: res-react-intl-darwin-x64.zip
+          asset_name: res-react-intl-darwin-x64.zip
           asset_content_type: application/gzip
 
-      - name: Upload react-intl-auto-id-ppx-linux-x64.zip to Github release 
+      - name: Upload res-react-intl-linux-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-linux-x64.zip
-          asset_name: react-intl-auto-id-ppx-linux-x64.zip
+          asset_path: res-react-intl-linux-x64.zip
+          asset_name: res-react-intl-linux-x64.zip
           asset_content_type: application/gzip
 
-      - name: Upload react-intl-auto-id-ppx-windows-x64.zip to Github release 
+      - name: Upload res-react-intl-windows-x64.zip to Github release 
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: react-intl-auto-id-ppx-windows-x64.zip
-          asset_name: react-intl-auto-id-ppx-windows-x64.zip
+          asset_path: res-react-intl-windows-x64.zip
+          asset_name: res-react-intl-windows-x64.zip
           asset_content_type: application/gzip
 
       - name: Publish NPM package

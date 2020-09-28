@@ -1,7 +1,7 @@
-(executable
-  (name Bin)
-  (public_name react-intl-auto-id-ppx)
-  (libraries react-intl-auto-id-ppx.lib)
+(executables
+  (names Ppx Extract)
+  (public_names res-react-intl-ppx res-react-intl-extract)
+  (libraries res-react-intl.lib)
   (ocamlopt_flags ( -linkall ))
-  (package react-intl-auto-id-ppx)
+  (package res-react-intl)
 )

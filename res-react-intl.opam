@@ -4,11 +4,11 @@ synopsis: "A short, but powerful statement about your project"
 description: """
 A short, but powerful statement about your project
 """
-maintainer: ["Dylan Irlbeck"]
-authors: ["Dylan Irlbeck"]
+maintainer: ["Simon Degraeve"]
+authors: ["Simon Degraeve"]
 license: "MIT"
-homepage: "https://github.com/SimonDegraeve/react-intl-auto-id-ppx"
-bug-reports: "https://github.com/SimonDegraeve/react-intl-auto-id-ppx/issues"
+homepage: "https://github.com/SimonDegraeve/res-react-intl"
+bug-reports: "https://github.com/SimonDegraeve/res-react-intl/issues"
 depends: [
   "ocaml" {>= "4.06.0"}
   "dune" {>= "2.0"}
@@ -17,7 +17,7 @@ depends: [
   "base" {build}
   "ppxlib" {build}
 ]
-dev-repo: "git+https://github.com/SimonDegraeve/react-intl-auto-id-ppx.git"
+dev-repo: "git+https://github.com/SimonDegraeve/res-react-intl.git"
 # We need to avoid "@runtest", since it depends on rely
 build: [
   ["dune" "subst"] {pinned}

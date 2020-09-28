@@ -6,7 +6,8 @@
     "watch": "bsb -make-world -w",
     "clean": "bsb -clean-world",
     "test": "jest --passWithNoTests",
-    "start": "yarn test"
+    "start": "yarn test",
+    "extract": "../../_build/default/bin/Extract.exe --allow-duplicates src"
   },
   "dependencies": {
     "@glennsl/bs-jest": "^0.5.1",

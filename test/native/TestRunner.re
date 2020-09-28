@@ -1,1 +1,1 @@
-ReactIntlAutoIdPpxTestNativeLib.Setup.cli();
+ResReactIntlTestNativeLib.Setup.cli();

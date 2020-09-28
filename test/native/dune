@@ -1,8 +1,8 @@
 
 (executable
   (name TestRunner)
-  (public_name ReactIntlAutoIdPpxTestRunner)
+  (public_name ResReactIntlTestRunner)
   (libraries
-    ReactIntlAutoIdPpxTestNativeLib
+    ResReactIntlTestNativeLib
   )
 )

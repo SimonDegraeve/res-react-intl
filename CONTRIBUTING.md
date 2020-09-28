@@ -44,7 +44,7 @@ This assumes you have a command like [open-cli](https://github.com/sindresorhus/
 To create a release and publish it on Opam, first update the `CHANGES.md` file with the last changes and the version that you want to release.
 The, you can run the script `script/release.sh`. The script will perform the following actions:
 
-- Create a tag with the version found in `react-intl-auto-id-ppx.opam`, and push it to your repository.
+- Create a tag with the version found in `res-react-intl.opam`, and push it to your repository.
 - Create the distribution archive.
 - Publish the distribution archive to a Github Release.
 - Update the repository's `gh-pages` branch with the latest documentation.
@@ -58,35 +58,35 @@ When the release is published on Github, the CI/CD will trigger the `Release` wo
 
 ### Repository Structure
 
-The following snippet describes react-intl-auto-id-ppx's repository structure.
+The following snippet describes res-react-intl's repository structure.
 
 ```text
 .
 ├── .github/
-|   Contains Github specific files such as actions definitions and issue templates.
+│   Contains Github specific files such as actions definitions and issue templates.
 │
 ├── bin/
-|   Source for react-intl-auto-id-ppx's binary. This links to the library defined in `lib/`.
+│   Source for res-react-intl's binaries. This links to the library defined in `lib/`.
 │
 ├── lib/
-|   Source for react-intl-auto-id-ppx's library. Contains react-intl-auto-id-ppx's core functionnalities.
+│   Source for res-react-intl's library. Contains res-react-intl's core functionnalities.
 │
 ├── test/
-|   Unit tests and integration tests for react-intl-auto-id-ppx.
+│   Unit tests and integration tests for res-react-intl.
 │
 ├── dune-project
-|   Dune file used to mark the root of the project and define project-wide parameters.
-|   For the documentation of the syntax, see https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
+│   Dune file used to mark the root of the project and define project-wide parameters.
+│   For the documentation of the syntax, see https://dune.readthedocs.io/en/stable/dune-files.html#dune-project
 │
 ├── LICENSE
 │
 ├── package.json
-|   Esy package definition.
-|   To know more about creating Esy packages, see https://esy.sh/docs/en/configuration.html.
+│   Esy package definition.
+│   To know more about creating Esy packages, see https://esy.sh/docs/en/configuration.html.
 │
 ├── README.md
 │
-└── react-intl-auto-id-ppx.opam
+└── res-react-intl.opam
     Opam package definition.
     To know more about creating and publishing opam packages, see https://opam.ocaml.org/doc/Packaging.html.
 ```

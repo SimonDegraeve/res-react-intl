@@ -1,6 +1,6 @@
 (Source ppx)
-(Cfg_str project_name react-intl-auto-id-ppx)
-(Cfg_str project_slug react-intl-auto-id-ppx)
+(Cfg_str project_name res-react-intl)
+(Cfg_str project_slug res-react-intl)
 (Cfg_str project_description"Reason PPX that generate Ids for ReactIntl messages")
 (Cfg_str syntax Reason)
 (Cfg_str package_manager Esy)

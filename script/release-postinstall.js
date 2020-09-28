@@ -6,7 +6,7 @@ const fs = require('fs')
 
 const platform = process.platform
 
-const binariesToCopy = ['react-intl-auto-id-ppx']
+const binariesToCopy = ['ppx', 'extract']
 
 function find_arch() {
   // The running binary is 64-bit, so the OS is clearly 64-bit.
@@ -75,9 +75,9 @@ const platformPath = 'platform-' + platform + '-' + arch
 const supported = fs.existsSync(platformPath)
 
 if (!supported) {
-  console.error('react-intl-auto-id-ppx does not support this platform :(')
+  console.error('res-react-intl does not support this platform :(')
   console.error('')
-  console.error('If you want react-intl-auto-id-ppx to support this platform natively,')
+  console.error('If you want res-react-intl to support this platform natively,')
   console.error('please open an issue at our repository, linked above.')
   console.error('Specify that you are on the ' + platform + ' platform,')
   console.error('and on the ' + arch + ' architecture.')
