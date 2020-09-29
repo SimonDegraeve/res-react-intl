@@ -9,109 +9,145 @@ let generateId = value => {
   "_" ++ (value |> Digest.string |> Digest.to_hex |> String.sub(_, 0, 8));
 };
 
-let printExpression = (expr: expression) =>
-  Printast.expression(0, Format.str_formatter, expr);
-
-let replaceIdFromLabels = labels => {
+let replaceIdFromLabels = (~loc, labels) => {
   let id = ref(`None);
 
-  labels
-  |> List.fold_left(
-       (acc, assoc) =>
-         switch (assoc) {
-         | (
-             Labelled(key),
-             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
-           )
-             when key == "id" =>
-           id.contents = `Id(value);
+  let labels =
+    labels
+    |> List.fold_left(
+         (acc, assoc) =>
+           switch (assoc) {
+           | (
+               Labelled(key),
+               {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+             )
+               when key == "id" =>
+             id.contents = `Id(value);
+             acc;
+           | (
+               Labelled(key),
+               {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+             ) as label
+               when key == "defaultMessage" =>
+             id.contents = (
+               switch (id.contents) {
+               | `None => `Message(value)
+               | value => value
+               }
+             );
+             List.append(acc, [label]);
+           | label => List.append(acc, [label])
+           },
+         [],
+       );
 
-           acc;
-         | (
-             Labelled(key),
-             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
-           ) as label
-             when key == "defaultMessage" =>
-           id.contents = (
-             switch (id.contents) {
-             | `None => `Message(value)
-             | value => value
-             }
-           );
-           List.append(acc, [label]);
-         | label => List.append(acc, [label])
-         },
-       [],
-     )
-  |> List.append(
-       {
-         [
+  let hasId =
+    labels
+    |> List.exists(label =>
+         switch (label) {
+         | (Labelled(key), _) when key == "id" => true
+         | _ => false
+         }
+       );
+
+  hasId
+    ? labels
+    : labels
+      |> List.append(
+           {
+             [
+               (
+                 Labelled("id"),
+                 (
+                   switch (id.contents) {
+                   | `Message(value) => value |> generateId
+                   | `Id(value) => value
+                   | `None =>
+                     raise(
+                       Location.Error(
+                         Location.error(
+                           ~loc,
+                           "Missing id for ReactIntl message",
+                         ),
+                       ),
+                     )
+                   }
+                 )
+                 |> Ast_helper.Const.string
+                 |> Ast_helper.Exp.constant,
+               ),
+             ];
+           },
+         );
+};
+
+let replaceIdFromRecord = (~loc, fields) => {
+  let id = ref(`None);
+
+  let fields =
+    fields
+    |> List.fold_left(
+         (acc, assoc) =>
+           switch (assoc) {
+           | (
+               {txt: Lident(key), _},
+               {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+             )
+               when key == "id" =>
+             id.contents = `Id(value);
+             acc;
+           | (
+               {txt: Lident(key), _},
+               {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
+             ) as field
+               when key == "defaultMessage" =>
+             id.contents = (
+               switch (id.contents) {
+               | `None => `Message(value)
+               | value => value
+               }
+             );
+             List.append(acc, [field]);
+           | field => List.append(acc, [field])
+           },
+         [],
+       );
+
+  let hasId =
+    fields
+    |> List.exists(field =>
+         switch (field) {
+         | ({txt: Lident(key), _}, _) when key == "id" => true
+         | _ => false
+         }
+       );
+
+  hasId
+    ? fields
+    : fields
+      |> List.append([
            (
-             Labelled("id"),
+             {txt: Lident("id"), loc: Ast_helper.default_loc.contents},
              (
                switch (id.contents) {
                | `Message(value) => value |> generateId
                | `Id(value) => value
-               | `None => ""
+               | `None =>
+                 raise(
+                   Location.Error(
+                     Location.error(~loc, "Missing id for ReactIntl message"),
+                   ),
+                 )
                }
              )
              |> Ast_helper.Const.string
              |> Ast_helper.Exp.constant,
            ),
-         ];
-       },
-     );
+         ]);
 };
 
-let replaceIdFromRecord =
-    (fields: list((Asttypes.loc(Longident.t), expression))) => {
-  let id = ref(`None);
-
-  fields
-  |> List.fold_left(
-       (acc, assoc) =>
-         switch ((assoc: (Asttypes.loc(Longident.t), expression))) {
-         | (
-             {txt: Lident(key), _},
-             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
-           )
-             when key == "id" =>
-           id.contents = `Id(value);
-           acc;
-         | (
-             {txt: Lident(key), _},
-             {pexp_desc: Pexp_constant(Pconst_string(value, _)), _},
-           ) as field
-             when key == "defaultMessage" =>
-           id.contents = (
-             switch (id.contents) {
-             | `None => `Message(value)
-             | value => value
-             }
-           );
-           List.append(acc, [field]);
-         | field => List.append(acc, [field])
-         },
-       [],
-     )
-  |> List.append([
-       (
-         {txt: Lident("id"), loc: Ast_helper.default_loc.contents},
-         (
-           switch (id.contents) {
-           | `Message(value) => value |> generateId
-           | `Id(value) => value
-           | `None => ""
-           }
-         )
-         |> Ast_helper.Const.string
-         |> Ast_helper.Exp.constant,
-       ),
-     ]);
-};
-
-let extractMessageFromLabels = (labels, callback) => {
-  let labels = labels |> replaceIdFromLabels;
+let extractMessageFromLabels = (~loc, labels, callback) => {
+  let labels = labels |> replaceIdFromLabels(~loc);
 
   let map =
     labels
@@ -136,8 +172,8 @@ let extractMessageFromLabels = (labels, callback) => {
   labels;
 };
 
-let extractMessageFromRecord = (fields, callback) => {
-  let fields = fields |> replaceIdFromRecord;
+let extractMessageFromRecord = (~loc, fields, callback) => {
+  let fields = fields |> replaceIdFromRecord(~loc);
 
   let map =
     fields
@@ -189,7 +225,7 @@ let extractMessagesFromValueBindings =
            Ast_helper.Exp.record(
              ~attrs=expr.pexp_attributes,
              ~loc=expr.pexp_loc,
-             extractMessageFromRecord(fields, callback),
+             extractMessageFromRecord(expr.pexp_loc, fields, callback),
              None,
            ),
          )
@@ -250,6 +286,7 @@ let getMapper = (callback: Message.t => unit): mapper => {
             {pexp_desc: Pexp_ident({txt, _}), _} as applyExpr,
             labels,
           ),
+        pexp_loc: loc,
         _,
       }
         when matchesFormattedMessage(txt) =>
@@ -257,7 +294,7 @@ let getMapper = (callback: Message.t => unit): mapper => {
         ~attrs=expr.pexp_attributes,
         ~loc=expr.pexp_loc,
         applyExpr,
-        extractMessageFromLabels(labels, callback),
+        extractMessageFromLabels(~loc, labels, callback),
       )
 
     | _ => default_mapper.expr(mapper, expr)

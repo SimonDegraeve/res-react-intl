@@ -1,6 +1,6 @@
 {
   "name": "res-react-intl",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Reason/OCaml PPX generating ReactIntl `id` from `defaultMessage`",
   "author": "Simon Degraeve <simon.degraeve@gmail.com>",
   "license": "MIT",
