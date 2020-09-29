@@ -1,6 +1,6 @@
 {
   "name": "res-react-intl",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "description": "Reason/OCaml PPX generating ReactIntl `id` from `defaultMessage`",
   "author": "Simon Degraeve <simon.degraeve@gmail.com>",
   "license": "MIT",
@@ -18,11 +18,11 @@
     "release": { "bin": ["Ppx", "Extract"] }
   },
   "dependencies": {
+    "@esy-ocaml/reason": "*",
     "@opam/dune": "1.11.4",
     "@opam/fmt": "0.8.8",
     "@opam/menhir": "20190924",
     "@opam/ocaml-migrate-parsetree": "1.5.0",
-    "@opam/reason": "3.5.2",
     "@opam/sedlex": "2.1",
     "@reason-native/rely": "^3.2.1"
   },

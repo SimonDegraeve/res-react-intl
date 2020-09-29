@@ -8,10 +8,6 @@
       "dir": "src",
       "subdirs": true,
       "type": "dev"
-    },
-    {
-      "dir": "../../vendors",
-      "subdirs": true
     }
   ],
   "package-specs": [

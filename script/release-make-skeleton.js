@@ -7,7 +7,7 @@ const esy = require('../esy.json')
 
 console.log(`Using esy.json:\n${esy}`)
 
-const filesToCopy = ['LICENSE', 'README.md', 'vendors/ReactIntl.re']
+const filesToCopy = ['LICENSE', 'README.md']
 
 function exec(cmd) {
   console.log(`exec: ${cmd}`)
@@ -75,7 +75,6 @@ const pkgJson = {
     'ppx',
     'extract.exe',
     'extract',
-    'vendors/',
     'bsconfig.json',
   ],
 }
@@ -84,7 +83,6 @@ fs.writeFileSync(path.join(dst, 'package.json'), JSON.stringify(pkgJson, null, 2
 
 const bsConfig = {
   name: pkgJson.name,
-  sources: ['vendors'],
   'bs-dependencies': ['reason-react'],
   reason: {
     'react-jsx': 3,

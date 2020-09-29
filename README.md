@@ -5,8 +5,6 @@
 
 Reason/OCaml PPX generating [ReactIntl](https://github.com/formatjs/formatjs) `id` _(short MD5)_ from `defaultMessage`.
 
-This package provides also bindings overrides from [bs-react-intl](https://github.com/reasonml-community/bs-react-intl).
-
 ## Example
 
 Input:
@@ -63,16 +61,16 @@ exports.make = make
 Install the PPX with `yarn` or `npm`
 
 ```bash
-yarn add res-react-intl
+yarn add res-react-intl bs-react-intl
 # Or
-npm install res-react-intl
+npm install res-react-intl bs-react-intl
 ```
 
 And add the PPX in your `bsconfig.json` file:
 
 ```json
 {
-  "bs-dependencies": ["res-react-intl"],
+  "bs-dependencies": ["bs-react-intl"],
   "ppx-flags": ["res-react-intl/ppx"]
 }
 ```
@@ -112,3 +110,4 @@ $ git push origin vx.y.z
 ## Background/Sources
 
 - [Setup PPX Inspiration](https://github.com/dylanirlbeck/tailwind-ppx)
+- [bs-react-intl-extractor](https://github.com/cknitt/bs-react-intl-extractor)
