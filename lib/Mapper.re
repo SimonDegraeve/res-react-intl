@@ -225,7 +225,7 @@ let extractMessagesFromValueBindings =
            Ast_helper.Exp.record(
              ~attrs=expr.pexp_attributes,
              ~loc=expr.pexp_loc,
-             extractMessageFromRecord(expr.pexp_loc, fields, callback),
+             extractMessageFromRecord(~loc=expr.pexp_loc, fields, callback),
              None,
            ),
          )
