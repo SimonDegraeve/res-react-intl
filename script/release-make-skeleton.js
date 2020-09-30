@@ -75,24 +75,7 @@ const pkgJson = {
     'ppx',
     'extract.exe',
     'extract',
-    'bsconfig.json',
   ],
 }
 
 fs.writeFileSync(path.join(dst, 'package.json'), JSON.stringify(pkgJson, null, 2))
-
-const bsConfig = {
-  name: pkgJson.name,
-  'bs-dependencies': ['reason-react'],
-  reason: {
-    'react-jsx': 3,
-  },
-  refmt: 3,
-  'package-specs': {
-    module: 'es6',
-    'in-source': true,
-  },
-  suffix: '.bs.js',
-}
-
-fs.writeFileSync(path.join(dst, 'bsconfig.json'), JSON.stringify(bsConfig, null, 2))
