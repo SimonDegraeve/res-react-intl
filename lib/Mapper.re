@@ -245,6 +245,7 @@ let getMapper = (callback: Message.t => unit): mapper => {
           callback,
         ),
       )
+      |> default_mapper.expr(mapper)
     | _ => default_mapper.expr(mapper, expr)
     };
   },
