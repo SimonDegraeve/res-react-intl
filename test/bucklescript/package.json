@@ -15,7 +15,7 @@
     "bs-react-intl": "^2.0.0",
     "bs-react-testing-library": "^0.7.3",
     "jest": "^26.4.2",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-intl": "^5.8.3",
